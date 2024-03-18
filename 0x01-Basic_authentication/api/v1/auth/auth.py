@@ -6,6 +6,7 @@ from typing import (
     TypeVar
 )
 
+
 class Auth:
     """Class for managing API authentication."""
 
