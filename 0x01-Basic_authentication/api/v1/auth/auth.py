@@ -24,7 +24,12 @@ class Auth:
             return True
 
         for excluded_path in excluded_paths:
-            if path.startswith(excluded_path.rstrip('/')):
+            if '*' in excluded_path:
+                # Extract the part of the excluded path before the wildcard *
+                prefix, _ = excluded_path.split('*', 1)
+                if path.startswith(prefix):
+                    return False
+            elif path.startswith(excluded_path.rstrip('/')):
                 return False
 
         return True
