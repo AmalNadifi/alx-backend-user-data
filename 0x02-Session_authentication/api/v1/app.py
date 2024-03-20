@@ -23,10 +23,9 @@ if auth_type:
     elif auth_type == "basic_auth":
         from api.v1.auth.basic_auth import BasicAuth
         auth = BasicAuth()
-    else:
-        raise ValueError(
-                "Invalid value. Supported values: 'auth', 'basic_auth'"
-                )
+    elif auth_type == "session_auth":
+        from api.v1.auth.session_auth import SessionAuth
+        auth = SessionAuth()
 
 
 @app.before_request
