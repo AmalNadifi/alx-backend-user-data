@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify, make_response
+#!/usr/bin/env python3
+from flask import request, jsonify
 from models.user import User
 from os import getenv
 
