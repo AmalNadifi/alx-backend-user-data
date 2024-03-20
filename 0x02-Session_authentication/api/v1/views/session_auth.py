@@ -2,6 +2,7 @@
 from flask import request, jsonify
 from models.user import User
 from os import getenv
+from api.v1.views import app_views
 
 
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
