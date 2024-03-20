@@ -100,4 +100,4 @@ class BasicAuth(Auth):
                         return self.user_object_from_credentials(
                                 email, password
                                 )
-        return
+        return None
