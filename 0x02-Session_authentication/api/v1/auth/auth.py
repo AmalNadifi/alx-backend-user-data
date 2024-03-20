@@ -5,6 +5,7 @@ from typing import (
     List,
     TypeVar
 )
+import os
 
 
 class Auth:
