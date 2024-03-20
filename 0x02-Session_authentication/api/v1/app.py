@@ -43,8 +43,8 @@ def before_request():
     if (request.path not in excluded_paths and
             auth.require_auth(request.path, excluded_paths)):
         # Check if authentication is required for the request path
-        if auth.authorization_header(request) is None and
-        auth.session_cookie(request) is None:
+        if (auth.authorization_header(request) is None and
+                auth.session_cookie(request)) is None:
             abort(401)  # Authorization header missing, raise 401 error
         if auth.current_user(request) is None:
             abort(403)  # Current user not authenticated, raise 403 error
