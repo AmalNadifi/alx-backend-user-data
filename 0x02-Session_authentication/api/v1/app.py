@@ -46,6 +46,7 @@ def before_request():
         if (auth.authorization_header(request) is None and
                 auth.session_cookie(request)) is None:
             abort(401)  # Authorization header missing, raise 401 error
+        request.current_user = auth.current_user(request)
         if auth.current_user(request) is None:
             abort(403)  # Current user not authenticated, raise 403 error
 
