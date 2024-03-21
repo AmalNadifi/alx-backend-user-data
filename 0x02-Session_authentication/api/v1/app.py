@@ -46,7 +46,7 @@ def before_request():
                 '/api/v1/forbidden/',
                 '/api/v1/auth_session/login/'
         ]
-        if auth.require_path(request.path, excluded_paths):
+        if auth.require_auth(request.path, excluded_paths):
             cookie = auth.session_cookie(request)
             # Check if authentication is required for the request path
             if auth.authorization_header(request) is None and cookie is None:
