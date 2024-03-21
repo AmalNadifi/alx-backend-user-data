@@ -19,7 +19,7 @@ class SessionDBAuth(SessionExpAuth):
             return None
         session_dictionary = {
                 "user_id": user_id,
-                "created_at": datetime.now()
+                "session_id": session_id
         }
         user = UserSession(**session_dictionary)
         user.save()
