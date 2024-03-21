@@ -11,7 +11,7 @@ class SessionExpAuth(SessionAuth):
     """ Thisis the class of SessionExpAuth that adds an expiration date
     to a session id
     """
-    def __init__ii(self):
+    def __init__(self):
         """This is the initialization method"""
         try:
             duration = int(os.getenv('SESSION_DURATION'))
