@@ -15,46 +15,44 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 auth = None
 # Load the appropriate authentication instance
 # based on the environment variable AUTH_TYPE
-auth_type = os.getenv("AUTH_TYPE")
-if auth_type:
-    if auth_type == "auth":
-        from api.v1.auth.auth import Auth
-        auth = Auth()
-    elif auth_type == "basic_auth":
-        from api.v1.auth.basic_auth import BasicAuth
-        auth = BasicAuth()
-    elif auth_type == "session_auth":
-        from api.v1.auth.session_auth import SessionAuth
-        auth = SessionAuth()
-    elif auth_type == "session_exp_auth":
-        from api.v1.auth.session_exp_auth import SessionExpAuth
-        auth = SessionExpAuth()
-    elif auth_type == "session_db_auth":
-        from api.v1.auth.session_db_auth import SessionDBAuth
-        auth = SessionDBAuth()
+AUTH_TYPE = os.getenv("AUTH_TYPE")
+if AUTH_TYPE == "auth":
+    from api.v1.auth.auth import Auth
+    auth = Auth()
+elif AUTH_TYPE == "basic_auth":
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
+elif AUTH_TYPE == "session_auth":
+    from api.v1.auth.session_auth import SessionAuth
+    auth = SessionAuth()
+elif AUTH_TYPE == "session_exp_auth":
+    from api.v1.auth.session_exp_auth import SessionExpAuth
+    auth = SessionExpAuth()
+elif AUTH_TYPE == "session_db_auth":
+    from api.v1.auth.session_db_auth import SessionDBAuth
+    auth = SessionDBAuth()
 
 
 @app.before_request
 def before_request():
     """Handler for before request filtering"""
     if auth is None:
-        return  # Do nothing if auth is not set
-
-    excluded_paths = [
-            '/api/v1/status/',
-            '/api/v1/unauthorized/',
-            '/api/v1/forbidden/',
-            '/api/v1/auth_session/login/'
-            ]
-    if (request.path not in excluded_paths and
-            auth.require_auth(request.path, excluded_paths)):
-        # Check if authentication is required for the request path
-        if (auth.authorization_header(request) is None and
-                auth.session_cookie(request)) is None:
-            abort(401)  # Authorization header missing, raise 401 error
-        request.current_user = auth.current_user(request)
-        if auth.current_user(request) is None:
-            abort(403)  # Current user not authenticated, raise 403 error
+        pass  # Do nothing if auth is not set
+    else:
+        setattr(request, "current_user", auth.current_user(request))
+        excluded_paths = [
+                '/api/v1/status/',
+                '/api/v1/unauthorized/',
+                '/api/v1/forbidden/',
+                '/api/v1/auth_session/login/'
+        ]
+        if auth.require_path(request.path, excluded_paths):
+            cookie = auth.session_cookie(request)
+            # Check if authentication is required for the request path
+            if auth.authorization_header(request) is None and cookie is None:
+                abort(401, description="Unauthorized")
+            if auth.current_user(request) is None:
+                abort(403, description="Forbidden")
 
 
 # Error handling
