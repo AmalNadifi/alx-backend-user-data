@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""This module is for the session_auth class"""
 from flask import request, jsonify
 from models.user import User
 import os
@@ -29,7 +30,7 @@ def auth_session():
 
 
 @app_views.route('/auth_session/logout', methods=['DELETE'],
-        strict_slashes=False)
+                strict_slashes=False)
 def handle_logout():
     """ This method handles the user logout"""
     from api.v1.app import auth
