@@ -70,4 +70,4 @@ class DB:
             for user in all_users:
                 if getattr(user, attr_name) == attr_value:
                     return user
-        raise NoResultFound 
+        raise NoResultFound
