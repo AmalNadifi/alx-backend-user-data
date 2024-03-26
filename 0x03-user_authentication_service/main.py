@@ -32,12 +32,12 @@ def register_user(email: str, password: str) -> None:
         password: the user's password
     """
     resp = requests.post("{}/users".format(BASE_URL),
-                        data={'email': email, 'password': password})
+                         data={'email': email, 'password': password})
     if resp.status_code == 200:
         assert (resp.json() == {"email": email, "message": "user created"})
     else:
         assert (resp.status_code == 400)
-        assert (res.json() == {"message": "email already registered"})
+        assert (resp.json() == {"message": "email already registered"})
 
 
 def log_in_wrong_password(email: str, password: str) -> None:
@@ -49,9 +49,10 @@ def log_in_wrong_password(email: str, password: str) -> None:
     Returns:
         None
     """
-    r = requests.post(f"{BASE_URL}/sessions",
-                    data={'email': email, 'password': password})
-    assert (r.status_code == 401) 
+    resp = requests.post(f"{BASE_URL}/sessions",
+                         data={'email': email, 'password': password})
+    assert (resp.status_code == 401)
+
 
 def log_in(email: str, password: str) -> str:
     """
@@ -66,7 +67,7 @@ def log_in(email: str, password: str) -> str:
     resp = requests.post(f"{BASE_URL}/sessions",
                          data={'email': email, 'password': password})
     assert (resp.status_code == 200)
-    assert(resp.json() == {"email": email, "message": "logged in"})
+    assert (resp.json() == {"email": email, "message": "logged in"})
     return resp.cookies['session_id']
 
 
@@ -91,7 +92,7 @@ def profile_logged(session_id: str) -> None:
     cookies = {'session_id': session_id}
     r = requests.get(f"{BASE_URL}/profile",
                      cookies=cookies)
-    assert(r.status_code == 200)
+    assert (r.status_code == 200)
 
 
 def log_out(session_id: str) -> None:
@@ -106,9 +107,9 @@ def log_out(session_id: str) -> None:
     r = requests.delete(f"{BASE_URL}/sessions",
                         cookies=cookies)
     if r.status_code == 302:
-        assert(r.url == f"{BASE_URL}/")
+        assert (r.url == f"{BASE_URL}/")
     else:
-        assert(r.status_code == 200)
+        assert (r.status_code == 200)
 
 
 def reset_password_token(email: str) -> str:
@@ -123,7 +124,7 @@ def reset_password_token(email: str) -> str:
                       data={'email': email})
     if r.status_code == 200:
         return r.json()['reset_token']
-    assert(r.status_code == 401)
+    assert (r.status_code == 401)
 
 
 def update_password(email: str, reset_token: str, new_password: str) -> None:
@@ -142,9 +143,9 @@ def update_password(email: str, reset_token: str, new_password: str) -> None:
     r = requests.put(f"{BASE_URL}/reset_password",
                      data=data)
     if r.status_code == 200:
-        assert(r.json() == {"email": email, "message": "Password updated"})
+        assert (r.json() == {"email": email, "message": "Password updated"})
     else:
-        assert(r.status_code == 403)
+        assert (r.status_code == 403)
 
 
 if __name__ == "__main__":
