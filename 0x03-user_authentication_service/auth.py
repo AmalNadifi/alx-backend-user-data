@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ This module is a definition of a _hash_password function """
 import bcrypt
+from uuid import uuid4
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
@@ -14,6 +15,13 @@ def _hash_password(password: str) -> bytes:
     """
     passwd = password.encode('utf-8')
     return bcrypt.hashpw(passwd, bcrypt.gensalt())
+
+
+def _generate_uuid() -> str:
+    """
+    This function generates a uuid and returns its str representation
+    """
+    return str(uuid4())
 
 
 class Auth:
